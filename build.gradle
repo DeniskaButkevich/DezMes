@@ -29,6 +29,7 @@ dependencies {
 	implementation 'org.postgresql:postgresql'
 	implementation 'org.projectlombok:lombok'
 	implementation 'javax.xml.bind:jaxb-api'
+	compile 'org.jsoup:jsoup:1.13.1'
 	compile('org.springframework.session:spring-session-jdbc')
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
 	compile('org.springframework.boot:spring-boot-starter-security')
