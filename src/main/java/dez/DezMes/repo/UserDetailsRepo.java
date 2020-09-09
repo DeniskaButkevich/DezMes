@@ -1,8 +1,12 @@
 package dez.DezMes.repo;
 
 import dez.DezMes.domain.User;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserDetailsRepo extends JpaRepository<User, String> {
+import java.util.Optional;
 
+public interface UserDetailsRepo extends JpaRepository<User, String> {
+    @EntityGraph(attributePaths = { "subscriptions", "subscribers" })
+    Optional<User> findById(String s);
 }
