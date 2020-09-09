@@ -14,7 +14,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("message")
@@ -31,9 +30,10 @@ public class MessageController {
     @GetMapping
     @JsonView(Views.FullMessage.class)
     public MessagePageDto list(
+            @AuthenticationPrincipal User user,
             @PageableDefault(size = MESSAGES_PER_PAGE, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return messageService.findAll(pageable);
+        return messageService.findForUser(pageable, user);
     }
 
     @GetMapping("{id}")

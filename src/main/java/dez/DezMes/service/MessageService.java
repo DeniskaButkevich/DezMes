@@ -2,18 +2,21 @@ package dez.DezMes.service;
 
 import dez.DezMes.domain.Message;
 import dez.DezMes.domain.User;
+import dez.DezMes.domain.UserSubscription;
 import dez.DezMes.domain.Views;
 import dez.DezMes.dto.EventType;
 import dez.DezMes.dto.MessagePageDto;
 import dez.DezMes.dto.MetaDto;
 import dez.DezMes.dto.ObjectType;
 import dez.DezMes.repo.MessageRepo;
+import dez.DezMes.repo.UserSubscriptionRepo;
 import dez.DezMes.util.WsSender;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageService {
@@ -34,10 +38,16 @@ public class MessageService {
     private static Pattern IMG_REGEX = Pattern.compile(IMAGE_PATTERN, Pattern.CASE_INSENSITIVE);
 
     private final MessageRepo messageRepo;
+    private final UserSubscriptionRepo userSubscriptionRepo;
     private final BiConsumer<EventType, Message> wsSender;
 
-    public MessageService(MessageRepo messageRepo, WsSender wsSender) {
+    @Autowired
+    public MessageService(
+            MessageRepo messageRepo,
+            UserSubscriptionRepo userSubscriptionRepo,
+            WsSender wsSender) {
         this.messageRepo = messageRepo;
+        this.userSubscriptionRepo = userSubscriptionRepo;
         this.wsSender = wsSender.getSender(ObjectType.MESSAGE, Views.IdName.class);
     }
 
@@ -89,17 +99,17 @@ public class MessageService {
 
 
     public Message update(Long id, Message message) throws IOException {
-            Message messageFromDb = messageRepo.findById(id).get();
+        Message messageFromDb = messageRepo.findById(id).get();
 
-            BeanUtils.copyProperties(message, messageFromDb, "id");
+        BeanUtils.copyProperties(message, messageFromDb, "id");
 
-            fillMeta(messageFromDb);
+        fillMeta(messageFromDb);
 
-            Message updatedMessage = messageRepo.save(messageFromDb);
+        Message updatedMessage = messageRepo.save(messageFromDb);
 
-            wsSender.accept(EventType.UPDATE, updatedMessage);
+        wsSender.accept(EventType.UPDATE, updatedMessage);
 
-            return messageRepo.save(messageFromDb);
+        return messageRepo.save(messageFromDb);
     }
 
     public Message create(Message message, User user) throws IOException {
@@ -118,8 +128,16 @@ public class MessageService {
         return message;
     }
 
-    public MessagePageDto findAll(Pageable pageable) {
-        Page<Message> page = messageRepo.findAll(pageable);
+    public MessagePageDto findForUser(Pageable pageable, User user) {
+        List<User> channels = userSubscriptionRepo.findBySubscriber(user)
+                .stream()
+                .map(UserSubscription::getChannel)
+                .collect(Collectors.toList());
+
+        channels.add(user);
+
+        Page<Message> page = messageRepo.findByAuthorIn(channels, pageable);
+
         return new MessagePageDto(
                 page.getContent(),
                 pageable.getPageNumber(),

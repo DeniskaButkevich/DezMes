@@ -13,18 +13,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("profile")
 public class ProfileController {
     private final ProfileService profileService;
-    private UserDetailsRepo userDetailsRepo;
 
     @Autowired
-    public ProfileController(ProfileService profileService, UserDetailsRepo userDetailsRepo) {
+    public ProfileController(ProfileService profileService) {
         this.profileService = profileService;
-        this.userDetailsRepo = userDetailsRepo;
     }
 
     @GetMapping("{id}")
     @JsonView(Views.FullProfile.class)
-    public User get(@PathVariable("id") String id) {
-        User user = userDetailsRepo.findById(id).get();
+    public User get(@PathVariable("id") User user) {
         return user;
     }
 
@@ -32,9 +29,8 @@ public class ProfileController {
     @JsonView(Views.FullProfile.class)
     public User changeSubscription(
             @AuthenticationPrincipal User subscriber,
-            @PathVariable("channelId") String id
+            @PathVariable("channelId") User channel
     ) {
-        User channel = userDetailsRepo.findById(id).get();
         if (subscriber.equals(channel)) {
             return channel;
         } else {
