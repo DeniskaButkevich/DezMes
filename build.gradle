@@ -35,10 +35,9 @@ node {
 
 //compileJava {
 //	options.fork = true
-////	options.forkOptions.javaHome = project.property('javacPath')
-////	options.forkOptions.javaHome = file('C:/Program Files/Java/jdk-14.0.1')
-////	targetCompatibility = 1.14
-////	sourceCompatibility = 1.14
+//////	options.forkOptions.javaHome = project.property('javacPath')
+//////	targetCompatibility = 1.14
+//////	sourceCompatibility = 1.14
 //}
 
 dependencies {
