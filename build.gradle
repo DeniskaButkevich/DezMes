@@ -33,13 +33,13 @@ node {
 	download = true
 }
 
-compileJava {
-	options.fork = true
-//	options.forkOptions.javaHome = project.property('javacPath')
-	options.forkOptions.javaHome = file('C:/Program Files/Java/jdk-14.0.1')
-//	targetCompatibility = 1.14
-//	sourceCompatibility = 1.14
-}
+//compileJava {
+//	options.fork = true
+////	options.forkOptions.javaHome = project.property('javacPath')
+////	options.forkOptions.javaHome = file('C:/Program Files/Java/jdk-14.0.1')
+////	targetCompatibility = 1.14
+////	sourceCompatibility = 1.14
+//}
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
