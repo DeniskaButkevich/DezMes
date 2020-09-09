@@ -15,7 +15,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -100,7 +99,6 @@ public class MessageService {
 
     public Message update(Long id, Message message) throws IOException {
         Message messageFromDb = messageRepo.findById(id).get();
-
         messageFromDb.setText(message.getText());
 
         fillMeta(messageFromDb);

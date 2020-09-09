@@ -56,6 +56,7 @@ public class MessageController {
             @PathVariable("id") Long id,
             @RequestBody Message message
     ) throws IOException {
+
         return messageService.update(id, message);
     }
 
