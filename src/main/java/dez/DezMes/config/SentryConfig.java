@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
-public class SentryConfig {
+public class SentryConfig{
     @Bean
     public HandlerExceptionResolver sentryExceptionResolver() {
         return new SentryExceptionResolver();
