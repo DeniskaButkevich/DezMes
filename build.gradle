@@ -8,7 +8,7 @@ plugins {
 
 group = 'dez'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '14'
+sourceCompatibility = '8'
 
 configurations {
 	developmentOnly
@@ -33,12 +33,12 @@ node {
 	download = true
 }
 
-//compileJava {
-//	options.fork = true
-//////	options.forkOptions.javaHome = project.property('javacPath')
-//////	targetCompatibility = 1.14
-//////	sourceCompatibility = 1.14
-//}
+compileJava {
+	options.fork = true
+////	options.forkOptions.javaHome = project.property('javacPath')
+	targetCompatibility = 1.8
+	sourceCompatibility = 1.8
+}
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
